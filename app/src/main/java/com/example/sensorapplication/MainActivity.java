@@ -12,10 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-   private TextView lightTV;
+   private TextView lightTV,proximityTV;
    private SensorManager sm;
    private SensorEventListener listener;
-   private Sensor light;
+   private Sensor light,proximity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
                 if (grayShade > 255) grayShade = 255;
                 lightTV.setTextColor(Color.rgb(255 - grayShade, 255 - grayShade, 255 - grayShade));
                 lightTV.setBackgroundColor(Color.rgb(grayShade, grayShade, grayShade));
+                if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                    if (event.values[0] == 0) {
+                        proximityTV.setText("Near");
+                    } else {
+                        proximityTV.setText("Away");
+                    }
+                }
 
             }
 
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         sm.registerListener(listener, light, SensorManager.SENSOR_DELAY_FASTEST);
+        sm.registerListener(listener,proximity, SensorManager.SENSOR_DELAY_NORMAL);
     }
     @Override
     protected void onPause() {
@@ -51,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         lightTV=findViewById(R.id.lightSensorTV);
+        proximityTV=findViewById(R.id.proximitySensorTV);
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         light = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
+        proximity=sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
     }
 }
