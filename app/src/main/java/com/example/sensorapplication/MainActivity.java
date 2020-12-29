@@ -12,10 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-   private TextView lightTV,proximityTV;
+   private TextView lightTV,proximityTV,accelerometerTV;
    private SensorManager sm;
    private SensorEventListener listener;
-   private Sensor light,proximity;
+   private Sensor light,proximity,accelerometer;
+   private float vibrateThreshold = 0;
+   private double x,y,z;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +33,21 @@ public class MainActivity extends AppCompatActivity {
                 if (grayShade > 255) grayShade = 255;
                 lightTV.setTextColor(Color.rgb(255 - grayShade, 255 - grayShade, 255 - grayShade));
                 lightTV.setBackgroundColor(Color.rgb(grayShade, grayShade, grayShade));
+
                 if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
                     if (event.values[0] == 0) {
-                        proximityTV.setText("Near");
+                        proximityTV.setText("Object Detected");
                     } else {
-                        proximityTV.setText("Away");
+                        proximityTV.setText("Not Detected");
                     }
+                }
+
+                if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER) {
+                    x=event.values[0];
+                    y=event.values[1];
+                    z=event.values[2];
+                    //vibrateThreshold = accelerometer.getMaximumRange()/2;
+                    //accelerometerTV.setText(x+" "+y+" "+z);
                 }
 
             }
@@ -50,18 +61,23 @@ public class MainActivity extends AppCompatActivity {
         };
         sm.registerListener(listener, light, SensorManager.SENSOR_DELAY_FASTEST);
         sm.registerListener(listener,proximity, SensorManager.SENSOR_DELAY_NORMAL);
+        sm.registerListener(listener,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
     }
     @Override
     protected void onPause() {
         super.onPause();
         sm.unregisterListener(listener, light);
+        sm.unregisterListener(listener,proximity);
+        sm.unregisterListener(listener,accelerometer);
     }
 
     private void init() {
         lightTV=findViewById(R.id.lightSensorTV);
         proximityTV=findViewById(R.id.proximitySensorTV);
+        accelerometerTV=findViewById(R.id.speedSensorTV);
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         light = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
         proximity=sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 }

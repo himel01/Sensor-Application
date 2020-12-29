@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/proximitySensorTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/proximitySensorTV"/>
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/lightSensorTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_below="@id/proximitySensorTV"
+        android:layout_marginTop="10dp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/speedSensorTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lightSensorTV"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>
